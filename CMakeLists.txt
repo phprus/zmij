@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.16...4.5)
 project(zmij CXX C)
 
 include(GNUInstallDirs)

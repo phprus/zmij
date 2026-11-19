@@ -10,12 +10,27 @@ jobs:
         include:
           - os: ubuntu-24.04
             cmake-args: -DZMIJ_USE_CONSTEXPR=OFF -DCMAKE_CXX_STANDARD=11
+          - os: ubuntu-24.04
+            cmake-args: -DCOMPILER_SUFFIX=-14 -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-loongarch64-gcc.cmake -DCMAKE_C_FLAGS=-mlsx -DCMAKE_CXX_FLAGS=-mlsx
+            packages: qemu-user gcc-14-loongarch64-linux-gnu g++-14-loongarch64-linux-gnu libc-dev-loong64-cross
+          - os: ubuntu-24.04
+            cmake-args: -DCOMPILER_SUFFIX=-14 -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-loongarch64-gcc.cmake -DCMAKE_C_FLAGS=-mlasx -DCMAKE_CXX_FLAGS=-mlasx
+            packages: qemu-user gcc-14-loongarch64-linux-gnu g++-14-loongarch64-linux-gnu libc-dev-loong64-cross
           - os: macos-15
             cmake-args: -DZMIJ_USE_CONSTEXPR=OFF -DCMAKE_CXX_STANDARD=11
     steps:
-      - uses: actions/checkout@v5
-      - run: cmake -B build ${{ matrix.cmake-args }}
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Install packages (Ubuntu)
+        if: runner.os == 'Linux' && matrix.packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --allow-downgrades --no-install-recommends ${{ matrix.packages }}
+      - name: Generate project files
+        run: cmake -B build ${{ matrix.cmake-args }}
       # --config/-C is required for multi-config generators and a noop on
       # single-config ones.
-      - run: cmake --build build --config Debug -j
-      - run: ctest --test-dir build -C Debug --output-on-failure
+      - name: Build
+        run: cmake --build build --config Debug -j
+      - name: Test
+        run: ctest --test-dir build -C Debug --output-on-failure
