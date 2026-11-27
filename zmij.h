@@ -135,6 +135,22 @@ static_assert(!ZMIJ_USE_SSE4_1 || ZMIJ_USE_SSE, "SSE4.1 requires SSE");
 #  define ZMIJ_USE_SSE4_1 0
 #endif
 
+#ifdef ZMIJ_USE_LSX
+// Use the provided definition.
+#elif defined(__loongarch_sx)
+#  define ZMIJ_USE_LSX ZMIJ_USE_SIMD
+#else
+#  define ZMIJ_USE_LSX 0
+#endif
+
+#ifdef ZMIJ_USE_LASX
+// Use the provided definition.
+#elif defined(__loongarch_asx)
+#  define ZMIJ_USE_LASX ZMIJ_USE_LSX
+#else
+#  define ZMIJ_USE_LASX 0
+#endif
+
 #ifdef ZMIJ_OPTIMIZE_SIZE
 // Use the provided definition.
 #elif defined(__OPTIMIZE_SIZE__)

@@ -23,6 +23,12 @@
 #elif ZMIJ_USE_SSE
 #  include <emmintrin.h>
 #endif
+#if ZMIJ_USE_LSX
+#  include <lsxintrin.h>
+#endif
+#if ZMIJ_USE_LASX
+#  include <lasxintrin.h>
+#endif
 
 #ifdef __aarch64__
 #  define ZMIJ_AARCH64 1

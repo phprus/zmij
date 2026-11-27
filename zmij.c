@@ -61,6 +61,28 @@ static_assert(!ZMIJ_USE_SSE4_1 || ZMIJ_USE_SSE,
 #  define ZMIJ_USE_SSE4_1 0
 #endif
 
+#ifdef ZMIJ_USE_LSX
+// Use the provided definition.
+#elif defined(__loongarch_sx)
+#  define ZMIJ_USE_LSX ZMIJ_USE_SIMD
+#else
+#  define ZMIJ_USE_LSX 0
+#endif
+#if ZMIJ_USE_LSX
+#  include <lsxintrin.h>
+#endif
+
+#ifdef ZMIJ_USE_LASX
+// Use the provided definition.
+#elif defined(__loongarch_asx)
+#  define ZMIJ_USE_LASX ZMIJ_USE_LSX
+#else
+#  define ZMIJ_USE_LASX 0
+#endif
+#if ZMIJ_USE_LASX
+#  include <lasxintrin.h>
+#endif
+
 #ifdef __aarch64__
 #  define ZMIJ_AARCH64 1
 #else

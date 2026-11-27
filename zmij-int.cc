@@ -23,6 +23,12 @@
 #elif ZMIJ_USE_SSE
 #  include <immintrin.h>
 #endif
+#if ZMIJ_USE_LSX
+#  include <lsxintrin.h>
+#endif
+#if ZMIJ_USE_LASX
+#  include <lasxintrin.h>
+#endif
 
 // 256-bit paths for the u128 body chunks.
 #ifdef ZMIJ_USE_AVX2
